@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WikiDesign | Diseño de interacción</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  color: #D9D9D9;
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, p {
+  overflow-wrap: break-word;
+}
+
+.barra-navegacion {
+  width: 100%;
+  min-height: 66px;
+  padding: 10px 24px;
+  margin: 0;
+  background-color: #D9D9D9;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 190px;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-wiki {
+  display: flex;
+  width: 130px;
+  max-width: 100%;
+  height: auto;
+}
+
+.enlaces {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.enlaces a {
+  color: #9286D9;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.enlaces a:hover {
+  color: #57568C;
+}
+
+.buscador-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 190px;
+  padding: 6px 12px;
+  border: 2px solid #9286D9;
+  border-radius: 25px;
+  background-color: transparent;
+}
+
+.search-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.buscador-input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #333333;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+}
+
+.buscador-panel:focus-within {
+  background-color: #FFFFFF;
+  border-color: #57568C;
+}
+
+.distribucion {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+  width: 100%;
+  margin: 0;
+  padding: 0 30px 50px 0;
+}
+
+.menu-wiki {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background-color: #292D4C;
+  color: #A8BF54;
+  border-radius: 0 0 160px 0;
+}
+
+.bloque-temas {
+  padding: 24px 18px 28px;
+  background-color: #5C5795;
+  border-radius: 0 0 120px 0;
+}
+
+.bloque-sumario {
+  padding: 22px 18px 30px;
+  background-color: #292D4C;
+  border-radius: 0 0 90px 0;
+}
+
+.encabezado-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.encabezado-menu > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.encabezado-menu h2 {
+  margin: 0;
+  color: #B7F032;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.encabezado-menu h3,
+.encabezado-menu h4 {
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: #D9D9D9;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.boton-flecha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin-left: auto;
+  border: none;
+  border-radius: 50%;
+  background-color: #D9D9D9;
+  cursor: pointer;
+}
+
+.boton-flecha img {
+  display: block;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.boton-flecha[aria-expanded="false"] img {
+  transform: rotate(180deg);
+}
+
+.contenido-menu {
+  max-height: 1000px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+.contenido-menu.colapsado {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lista-temas,
+.lista-sumario {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lista-temas a,
+.lista-sumario a {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+  padding: 5px 2px;
+  color: #B7F032;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.lista-temas a:hover,
+.lista-sumario a:hover {
+  color: #FFFFFF;
+  background-color: rgba(255,255,255,0.07);
+}
+
+.lista-temas a[aria-current="true"] {
+  color: #FFFFFF;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.numero-tema {
+  min-width: 17px;
+  flex-shrink: 0;
+  font-size: 10px;
+}
+
+.icono-tema {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.texto-enlace {
+  flex: 1;
+  min-width: 0;
+}
+
+.punto-sumario {
+  width: 4px;
+  height: 4px;
+  margin: 5px 2px 0 3px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: #B7F032;
+}
+
+.contenido-principal {
+  min-width: 0;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.contenido-principal h1 {
+  margin: 15px 0 28px;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.25;
+  background: linear-gradient(180deg, #7D8C46, #D9D9D9, #9286D9);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.contenido-principal p {
+  width: 100%;
+  margin: 0 0 24px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #292D4C;
+  color: #D9D9D9;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.8;
+  border-left: 4px solid #B7F032;
+}
+
+.seccion-contenido {
+  scroll-margin-top: 25px;
+}
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 30px 0 40px;
+}
+
+@media (max-width: 1024px) {
+  .grid-tarjetas {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+.tarjeta-contenedor {
+  perspective: 1000px;
+  height: 150px;
+  cursor: pointer;
+}
+
+.tarjeta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.tarjeta-contenedor.volteada .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+
+.tarjeta-frente, .tarjeta-atras {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tarjeta-frente {
+  background-color: #5C5795;
+  border: 2px solid #B7F032;
+  color: #B7F032;
+}
+
+.tarjeta-frente h3 {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.tarjeta-frente .indicador-clic {
+  margin-top: 8px;
+  font-size: 9px;
+  color: #D9D9D9;
+  opacity: 0.8;
+  font-weight: 600;
+}
+
+.tarjeta-atras {
+  background-color: #292D4C;
+  border: 2px solid #9286D9;
+  color: #FFFFFF;
+  transform: rotateY(180deg);
+}
+
+.tarjeta-atras p {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #D9D9D9 !important;
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+  border-left: none !important;
+}
+
+.bloque-storytelling {
+  background-color: #1A1D33;
+  border: 1px solid #5C5795;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.bloque-storytelling h2 {
+  color: #B7F032;
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 0;
+}
+
+.bloque-grid-medios {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: center;
+  margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+  .bloque-grid-medios {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.imagen-uniforme, .svg-uniforme, .video-uniforme {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.lista-resumen-ixd {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lista-resumen-ixd li {
+  background-color: #292D4C;
+  color: #FFFFFF;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border-left: 4px solid #B7F032;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lista-resumen-ixd li span {
+  color: #B7F032;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.caja-audio-resumen {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #1A1D33;
+  border-radius: 8px;
+}
+
+.texto-audio-label {
+  background: transparent !important;
+  color: #D9D9D9 !important;
+  padding: 0 !important;
+  margin: 0 0 10px 0 !important;
+  font-size: 13px !important;
+  border-left: none !important;
+}
+
+.reproductor-audio {
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .barra-navegacion {
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .logo-wiki {
+    width: 115px;
+  }
+  .enlaces {
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .distribucion {
+    grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+    gap: 22px;
+    padding: 25px 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .barra-navegacion {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 12px 16px;
+  }
+  .enlaces {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .buscador-panel {
+    width: 170px;
+    margin-left: auto;
+  }
+  .distribucion {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 20px 16px;
+  }
+}
+
+footer {
+  background-color: #1e1b38;
+  padding: 32px;
+  margin-top: 48px;
+  border-top: 1px solid #3b3663;
+  border-radius: 60px 60px 0 0;
+}
+</style>
+</head>
+
+<body>
+
+<nav class="barra-navegacion" aria-label="Navegación principal">
+  <a href="index.html" aria-label="WikiDesign, inicio">
+    <img src="media/WikiDesign - Logo H.svg" alt="WikiDesign" width="150" class="logo-wiki">
+  </a>
+
+  <div class="enlaces">
+    <a href="#diseno-interaccion" onclick="irInicio(event)">Inicio</a>
+    <a href="colabora.html">Colabora</a>
+    <a href="acerca.html">Acerca de nosotros</a>
+  </div>
+
+  <form class="buscador-panel" role="search" onsubmit="ejecutarBusqueda(event)">
+    <img src="media/iconos/Icono lupa.svg" alt="" class="search-icon">
+    <input
+      type="search"
+      id="input-buscador"
+      placeholder="Buscar..."
+      class="buscador-input"
+      aria-label="Buscar en WikiDesign">
+  </form> 
+</nav>
+
+<div class="distribucion">
+
+  <aside class="menu-wiki" aria-label="Navegación de contenidos">
+    <section class="bloque-temas" id="inicio-temas">
+      <header class="encabezado-menu">
+        <div>
+          <h2>TEMAS</h2>
+        </div>
+        <button
+          class="boton-flecha"
+          type="button"
+          onclick="alternarMenu('contenido-temas', this)"
+          aria-expanded="true"
+          aria-controls="contenido-temas"
+          aria-label="Contraer lista de temas">
+          <img src="media/Fecha arriba.svg" alt="">
+        </button>
+      </header>
+
+      <div id="contenido-temas" class="contenido-menu">
+        <nav id="lista-temas" class="lista-temas" aria-label="Temas principales"></nav>
+      </div>
+    </section>
+
+    <section class="bloque-sumario" id="inicio-sumario">
+      <header class="encabezado-menu">
+        <div>
+          <h2>SUMARIO</h2>
+          <h3 id="nombre-tema">Diseño de interacción</h3>
+        </div>
+        <button
+          class="boton-flecha"
+          type="button"
+          onclick="alternarMenu('contenido-sumario', this)"
+          aria-expanded="true"
+          aria-controls="contenido-sumario"
+          aria-label="Contraer lista de subtemas">
+          <img src="media/Fecha arriba.svg" alt="">
+        </button>
+      </header>
+
+      <div id="contenido-sumario" class="contenido-menu">
+        <nav id="lista-sumario" class="lista-sumario" aria-label="Subtemas"></nav>
+      </div>
+    </section>
+  </aside>
+
+  <main class="contenido-principal">
+
+    <section id="diseno-interaccion" class="seccion-contenido">
+      <h1>DISEÑO DE INTERACCIÓN</h1>
+
+      <!-- TARJETAS INTERACTIVAS DE LOS 5 CONCEPTOS -->
+      <div class="grid-tarjetas">
+        <div class="tarjeta-contenedor" id="interaccion-principios" onclick="rotarTarjeta(this)">
+          <div class="tarjeta-inner">
+            <div class="tarjeta-frente">
+              <h3>Principios de interacción</h3>
+              <span class="indicador-clic">Clic para ver concepto ↻</span>
+            </div>
+            <div class="tarjeta-atras">
+              <p>Las reglas y guías básicas que hacen que un sistema sea fácil, intuitivo y cómodo de usar.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjeta-contenedor" id="interaccion-controles" onclick="rotarTarjeta(this)">
+          <div class="tarjeta-inner">
+            <div class="tarjeta-frente">
+              <h3>Controles y acciones</h3>
+              <span class="indicador-clic">Clic para ver concepto ↻</span>
+            </div>
+            <div class="tarjeta-atras">
+              <p>Los elementos con los que interactúa el usuario (botones, menús, campos) y la respuesta directa que provocan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjeta-contenedor" id="interaccion-feedback" onclick="rotarTarjeta(this)">
+          <div class="tarjeta-inner">
+            <div class="tarjeta-frente">
+              <h3>Retroalimentación del sistema</h3>
+              <span class="indicador-clic">Clic para ver concepto ↻</span>
+            </div>
+            <div class="tarjeta-atras">
+              <p>La confirmación o aviso que la pantalla le da al usuario para informarle qué está pasando (mensajes, pantallas de carga).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjeta-contenedor" id="interaccion-micro" onclick="rotarTarjeta(this)">
+          <div class="tarjeta-inner">
+            <div class="tarjeta-frente">
+              <h3>Microinteracciones</h3>
+              <span class="indicador-clic">Clic para ver concepto ↻</span>
+            </div>
+            <div class="tarjeta-atras">
+              <p>Pequeñas animaciones o detalles visuales que acompañan una acción específica (como la vibración de un "me gusta").</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tarjeta-contenedor" id="interaccion-prototipos" onclick="rotarTarjeta(this)">
+          <div class="tarjeta-inner">
+            <div class="tarjeta-frente">
+              <h3>Prototipos interactivos</h3>
+              <span class="indicador-clic">Clic para ver concepto ↻</span>
+            </div>
+            <div class="tarjeta-atras">
+              <p>Modelos dinámicos o simulaciones de la interfaz que permiten probar el diseño y la experiencia antes de desarrollarlo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN STORYTELLING -->
+      
+      <!-- ESCENA 1: La Frustración -->
+      <div class="bloque-storytelling">
+        <h2>La frustración del usuario</h2>
+        <div class="bloque-grid-medios">
+          <div>
+            <p>
+              "Imagina que necesitas encontrar información importante en internet. Tomas tu computadora, abres el navegador y entras a una página web que parece tener todo lo que necesitas... Después de unos segundos comienzas a preguntarte: ¿Dónde está el menú? ¿Cómo regreso a la página anterior? ¿Dónde tengo que hacer clic? ¿Por qué este botón no funciona?"
+            </p>
+            <p>
+              "Intentas buscar la información, pero los textos están desordenados, los botones no son claros y algunas opciones parecen estar escondidas. Haces clic en un elemento pensando que te llevará a donde necesitas, pero sucede algo completamente diferente. Después de varios intentos, comienzas a sentir frustración: la página tiene imágenes y contenido, pero utilizarla resulta demasiado complicado."
+            </p>
+          </div>
+          <div>
+            <img src="imagenes/istockphoto-2149251025-1024x1024.jpg" alt="Usuario buscando información con frustración" class="imagen-uniforme">
+          </div>
+        </div>
+      </div>
+
+      <!-- ESCENA 2: El Cambio de Experiencia -->
+      <div class="bloque-storytelling">
+        <h2>Una nueva experiencia</h2>
+        <div class="bloque-grid-medios">
+          <div>
+            <img src="imagenes/Screendesign.jpg" alt="Diseño de pantallas responsive" class="imagen-uniforme">
+          </div>
+          <div>
+            <p>
+              "Entonces decides salir y buscar otra opción. Entras a una segunda página web y la experiencia cambia por completo."
+            </p>
+            <p>
+              "Desde el primer momento sabes dónde comenzar. El menú está claramente identificado, los botones indican qué sucederá al seleccionarlos y la información está organizada para que la encuentres inmediatamente."
+            </p>
+            <p>
+              "Esta vez no tuviste que detenerte a pensar cómo utilizar la página, simplemente lo hiciste. Pero <strong>¿qué hizo diferente a estas dos experiencias?</strong>"
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESCENA 3: La Explicación del IxD -->
+      <div class="bloque-storytelling" id="experiencia-concepto">
+        <h2>¿Qué es el Diseño de Interacción?</h2>
+        <div class="bloque-grid-medios">
+          <div>
+            <p>
+              "La respuesta se encuentra en algo que normalmente no vemos, pero que está presente en cada interacción: el <strong>Diseño de Interacción (IxD)</strong>."
+            </p>
+            <p>
+              "El diseño de interacción busca definir cómo las personas interactúan con un producto, sistema o servicio digital. No consiste únicamente en hacer que una página se vea atractiva, sino en conseguir que sea fácil de entender, utilizar y navegar, permitiendo que el usuario alcance sus objetivos de manera clara y eficiente."
+            </p>
+            <p style="background-color: #5C5795; color: #B7F032; font-weight: bold; border-left: 4px solid #B7F032;">
+              "El diseño de interacción es invisible, pero la experiencia que crea nunca lo es: no lo ves, pero lo sientes."
+            </p>
+          </div>
+         
+          <div style="background-color: #FFFFFF; padding: 20px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <img src="media/undraw_user-flow_d1ya.svg" alt="Flujo de usuario e interacción" class="svg-uniforme">
+          </div>
+        </div>
+      </div>
+
+      <!-- ESCENA 4: Resumen y Demostración Visual/Audio -->
+      <div class="bloque-storytelling">
+        <h2>En resumen, el IxD...</h2>
+        
+        <ul class="lista-resumen-ixd">
+          <li><span>✓</span> Hace que la interfaz sea fácil de entender.</li>
+          <li><span>✓</span> Facilita la navegación en todo momento.</li>
+          <li><span>✓</span> Da claridad en cada acción.</li>
+          <li>
+            <span>✓</span> Genera retroalimentación oportuna.
+            <div class="caja-audio-resumen">
+              <p class="texto-audio-label">Escucha un ejemplo de retroalimentación sonora:</p>
+              <audio controls class="reproductor-audio">
+                <source src="media/game-over-music-melancholic-bells-bop-audio-1-00-02.mp3" type="audio/mp3">
+                Tu navegador no soporta la reproducción de audio.
+              </audio>
+            </div>
+          </li>
+          <li><span>✓</span> Considera la accesibilidad para todos los usuarios.</li>
+          <li><span>✓</span> Te ayuda a alcanzar tus objetivos sin frustración.</li>
+        </ul>
+
+        <div class="bloque-grid-medios" style="margin-top: 30px;">
+          <div style="text-align: center;">
+            <h3 style="color: #B7F032;">Animación de flujo</h3>
+            <img src="imagenes/VID-20261002-WA0001.gif" alt="Animación de flujo de pantalla" class="imagen-uniforme" style="max-width: 250px; width: 100%; height: auto; display: inline-block;">
+          </div>
+          <div>
+            <h3 style="color: #B7F032;">Demostración de video</h3>
+            <video controls class="video-uniforme"> 
+              <source src="media/vivideo-video-compressor.mp4" type="video/mp4">
+              Tu navegador no soporta el video.
+            </video>
+          </div>
+        </div>
+
+      <!-- ESCENA 5: Cierre -->
+      <div class="bloque-storytelling" style="text-align: center;">
+        <h2>La próxima vez que navegues...</h2>
+        <p style="background-color: #292D4C; color: #FFFFFF; border-left: none;">
+          "Observa, compara y descubre el diseño de interacción detrás de cada clic, cada botón y cada mensaje. Porque quizá no lo veas, pero está ahí, haciendo que todo sea más fácil. El diseño de interacción es invisible, pero la experiencia que crea nunca lo es."
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script>
+const temasWiki = {
+  "experiencia-usuario": {
+    titulo: "Experiencia de usuario - P1",
+    icono: "icono-experiencia.svg",
+    subtemas: [
+      ["Concepto de experiencia de usuario", "experiencia-concepto"],
+      ["Importancia de la experiencia de usuario", "experiencia-importancia"],
+      ["Necesidades del usuario", "experiencia-necesidades"],
+      ["Usabilidad y accesibilidad", "experiencia-usabilidad"],
+      ["Evaluación de la experiencia", "experiencia-evaluacion"]
+    ]
+  },
+  "diseno-web": {
+    titulo: "Diseño web",
+    icono: "icono-web.svg",
+    subtemas: [
+      ["Fundamentos del diseño web", "web-fundamentos"],
+      ["Estructura de una página web", "web-estructura"],
+      ["Diseño adaptable", "web-responsive"],
+      ["HTML y CSS", "web-html-css"],
+      ["Accesibilidad web", "web-accesibilidad"]
+    ]
+  },
+  "design-thinking": {
+    titulo: "Design thinking",
+    icono: "icono-thinking.svg",
+    subtemas: [
+      ["¿Qué es design thinking?", "thinking-concepto"],
+      ["Empatizar", "thinking-empatizar"],
+      ["Definir el problema", "thinking-definir"],
+      ["Idear soluciones", "thinking-idear"],
+      ["Prototipar y evaluar", "thinking-prototipar"]
+    ]
+  },
+  "diseno-centrado-usuario": {
+    titulo: "Diseño centrado en el usuario",
+    icono: "icono-usuario.svg",
+    subtemas: [
+      ["Principios del diseño centrado en el usuario", "dcu-principios"],
+      ["Investigación de usuarios", "dcu-investigacion"],
+      ["Perfiles y necesidades", "dcu-perfiles"],
+      ["Pruebas con usuarios", "dcu-pruebas"],
+      ["Mejora iterativa", "dcu-mejora"]
+    ]
+  },
+  "diseno-interaccion": {
+    titulo: "Diseño de interacción",
+    icono: "icono-interaccion.svg",
+    subtemas: [
+      ["Principios de interacción", "interaccion-principios"],
+      ["Controles y acciones", "interaccion-controles"],
+      ["Retroalimentación del sistema", "interaccion-feedback"],
+      ["Microinteracciones", "interaccion-micro"],
+      ["Prototipos interactivos", "interaccion-prototipos"]
+    ]
+  },
+  "arquitectura-informacion": {
+    titulo: "Arquitectura de la información",
+    icono: "icono-arquitectura.svg",
+    subtemas: [
+      ["Organización de contenidos", "ai-organizacion"],
+      ["Jerarquía de información", "ai-jerarquia"],
+      ["Etiquetado", "ai-etiquetado"],
+      ["Sistemas de búsqueda", "ai-busqueda"],
+      ["Mapas del sitio", "ai-mapas"]
+    ]
+  },
+  "diseno-navegacion": {
+    titulo: "Diseño de navegación",
+    icono: "icono-navegacion.svg",
+    subtemas: [
+      ["Tipos de navegación", "navegacion-tipos"],
+      ["Menús y enlaces", "navegacion-menus"],
+      ["Orientación del usuario", "navegacion-orientacion"],
+      ["Navegación móvil", "navegacion-movil"],
+      ["Pruebas de navegación", "navegacion-pruebas"]
+    ]
+  },
+  "diseno-visual": {
+    titulo: "Diseño visual",
+    icono: "icono-visual.svg",
+    subtemas: [
+      ["Color y contraste", "visual-color"],
+      ["Tipografía", "visual-tipografia"],
+      ["Composición y retícula", "visual-composicion"],
+      ["Iconografía e imágenes", "visual-iconografia"],
+      ["Consistencia visual", "visual-consistencia"]
+    ]
+  }
+};
+
+function alternarMenu(idContenido, boton) {
+  const contenido = document.getElementById(idContenido);
+  if (!contenido) return;
+  const expandido = boton.getAttribute("aria-expanded") === "true";
+  contenido.classList.toggle("colapsado", expandido);
+  boton.setAttribute("aria-expanded", String(!expandido));
+}
+
+function mostrarTema(idTema) {
+  const tema = temasWiki[idTema];
+  const listaSumario = document.getElementById("lista-sumario");
+  const nombreTema = document.getElementById("nombre-tema");
+  if (!tema || !listaSumario || !nombreTema) return;
+  nombreTema.textContent = tema.titulo;
+  listaSumario.replaceChildren();
+
+  tema.subtemas.forEach(([titulo, id]) => {
+    const enlace = document.createElement("a");
+    enlace.href = "#" + id;
+    const punto = document.createElement("span");
+    punto.className = "punto-sumario";
+    punto.setAttribute("aria-hidden", "true");
+    const texto = document.createElement("span");
+    texto.className = "texto-enlace";
+    texto.textContent = titulo;
+    enlace.append(punto, texto);
+    
+    enlace.addEventListener("click", () => {
+      document.querySelectorAll('.tarjeta-contenedor').forEach(tarjeta => {
+        if (tarjeta.id === id) {
+          tarjeta.classList.add('volteada');
+        } else {
+          tarjeta.classList.remove('volteada');
+        }
+      });
+    });
+    listaSumario.appendChild(enlace);
+  });
+}
+
+const listaTemas = document.getElementById("lista-temas");
+Object.entries(temasWiki).forEach(([idTema, tema], indice) => {
+  const enlace = document.createElement("a");
+  enlace.href = "#";
+  enlace.dataset.tema = idTema;
+  const numero = document.createElement("span");
+  numero.className = "numero-tema";
+  numero.textContent = String(indice + 1).padStart(2, "0");
+  const icono = document.createElement("img");
+  icono.className = "icono-tema";
+  icono.src = "media/iconos/" + tema.icono;
+  icono.alt = "";
+  icono.setAttribute("aria-hidden", "true");
+  const texto = document.createElement("span");
+  texto.className = "texto-enlace";
+  texto.textContent = tema.titulo;
+  enlace.append(numero, icono, texto);
+  enlace.addEventListener("click", evento => {
+    evento.preventDefault();
+    mostrarTema(idTema);
+  });
+  listaTemas.appendChild(enlace);
+});
+
+mostrarTema("diseno-interaccion");
+
+function rotarTarjeta(elemento) {
+  elemento.classList.toggle('volteada');
+}
+
+function irInicio(evento) {
+  if (evento) evento.preventDefault();
+  
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+
+  const input = document.getElementById("input-buscador");
+  if (input) input.value = "";
+  if (typeof limpiarResaltados === 'function') {
+    limpiarResaltados();
+  }
+
+  document.querySelectorAll('.tarjeta-contenedor').forEach(tarjeta => {
+    tarjeta.classList.remove('volteada');
+  });
+
+  if (typeof mostrarTema === 'function') {
+    mostrarTema("experiencia-usuario");
+  }
+}
+
+// --- FUNCIONES DE BÚSQUEDA Y RESALTADO ---
+function limpiarResaltados() {
+  document.querySelectorAll('mark.resaltado-busqueda').forEach(mark => {
+    const parent = mark.parentNode;
+    parent.replaceChild(document.createTextNode(mark.textContent), mark);
+    parent.normalize();
+  });
+}
+
+function resaltarTodoEnNodo(nodo, termino) {
+  let encontrado = false;
+
+  if (nodo.nodeType === Node.TEXT_NODE) {
+    const textoOriginal = nodo.nodeValue;
+    const textoLower = textoOriginal.toLowerCase();
+    let index = textoLower.indexOf(termino);
+
+    if (index !== -1) {
+      const span = document.createElement('span');
+      let ultimoIndice = 0;
+
+      while (index !== -1) {
+        span.appendChild(document.createTextNode(textoOriginal.substring(ultimoIndice, index)));
+
+        const coincidencia = document.createElement('mark');
+        coincidencia.className = 'resaltado-busqueda';
+        coincidencia.style.backgroundColor = '#B7F032';
+        coincidencia.style.color = '#000000';
+        coincidencia.style.padding = '2px 4px';
+        coincidencia.style.borderRadius = '4px';
+        coincidencia.style.fontWeight = 'bold';
+        coincidencia.textContent = textoOriginal.substring(index, index + termino.length);
+        span.appendChild(coincidencia);
+
+        ultimoIndice = index + termino.length;
+        index = textoLower.indexOf(termino, ultimoIndice);
+        encontrado = true;
+      }
+
+      span.appendChild(document.createTextNode(textoOriginal.substring(ultimoIndice)));
+      nodo.parentNode.replaceChild(span, nodo);
+    }
+  } else if (nodo.nodeType === Node.ELEMENT_NODE && nodo.nodeName !== 'SCRIPT' && nodo.nodeName !== 'STYLE' && nodo.nodeName !== 'NAV') {
+    for (let i = 0; i < nodo.childNodes.length; i++) {
+      if (resaltarTodoEnNodo(nodo.childNodes[i], termino)) {
+        encontrado = true;
+      }
+    }
+  }
+  return encontrado;
+}
+
+function ejecutarBusqueda(evento) {
+  if (evento) evento.preventDefault();
+  
+  const input = document.getElementById("input-buscador");
+  if (!input) return;
+  
+  const termino = input.value.trim().toLowerCase();
+  if (!termino) return;
+
+  limpiarResaltados();
+
+  let encontrado = false;
+  const contenedores = document.querySelectorAll('.contenido-principal, .bloque-storytelling, .tarjeta-contenedor');
+  
+  for (const contenedor of contenedores) {
+    if (resaltarTodoEnNodo(contenedor, termino)) {
+      encontrado = true;
+    }
+  }
+
+  if (encontrado) {
+    const primerResaltado = document.querySelector('mark.resaltado-busqueda');
+    if (primerResaltado) {
+      primerResaltado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    input.value = "";
+  } else {
+    alert("No se encontraron resultados para: \"" + termino + "\"");
+  }
+}
+</script>
+
+<footer>
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 15px; text-align: center;">
+    <div>
+      <img src="media/WikiDesign - Logo Vertical.svg" alt="Wiki Design Logo" width="130" style="height: auto;"/>
+    </div>
+    <div>
+      <p style="color: #B7F032; font-size: 13px; font-weight: 500; margin: 0 0 8px 0; background: transparent; padding: 0; border: none;">
+        © 2026 Wiki Design. Todos los derechos reservados.
+      </p>
+      <p style="color: #B7F032; font-size: 11px; opacity: 0.9; max-width: 600px; margin: 0; background: transparent; padding: 0; border: none;">
+        El contenido de este sitio ha sido desarrollado con fines educativos y académicos. Los textos, imágenes y recursos utilizados pertenecen a sus respectivos autores y se emplean únicamente como material de consulta y aprendizaje.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

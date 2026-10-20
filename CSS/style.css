@@ -1,0 +1,156 @@
+.imagen-uniforme {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+}
+.video-uniforme {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+}
+.svg-uniforme {
+  width: 300px;              /* Mismo ancho que las otras imágenes */
+  height: 200px;             /* Mismo alto que las otras imágenes */
+  object-fit: contain;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;             /* Espacio interno para la ilustración */
+  box-sizing: border-box;    /* ¡LA CLAVE! Obliga a que el padding no aumente el tamaño total de la tarjeta */
+}
+/* --- TARJETAS INTERACTIVAS (GRID & FLIP) --- */
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Fuerza a que entren las 5 en una sola fila */
+  gap: 12px;
+  margin: 30px 0 40px;
+}
+
+@media (max-width: 1024px) {
+  .grid-tarjetas {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Se adaptan en pantallas medianas o móviles */
+  }
+}
+
+.tarjeta-contenedor {
+  perspective: 1000px;
+  height: 150px; /* Reducimos la altura de la tarjeta */
+  cursor: pointer;
+}
+
+.tarjeta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.tarjeta-contenedor.volteada .tarjeta-inner {
+  transform: rotateY(180deg);
+}
+
+.tarjeta-frente, .tarjeta-atras {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tarjeta-frente {
+  background-color: #5C5795;
+  border: 2px solid #B7F032;
+  color: #B7F032;
+}
+
+.tarjeta-frente h3 {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px; /* Reducimos el tamaño de letra para que el título ajuste perfecto */
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.tarjeta-frente .indicador-clic {
+  margin-top: 8px;
+  font-size: 9px;
+  color: #D9D9D9;
+  opacity: 0.8;
+  font-weight: 600;
+}
+
+.tarjeta-atras {
+  background-color: #292D4C;
+  border: 2px solid #9286D9;
+  color: #FFFFFF;
+  transform: rotateY(180deg);
+}
+
+.tarjeta-atras p {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #D9D9D9 !important;
+  font-size: 11px !important; /* Texto interno más compacto */
+  line-height: 1.3 !important;
+  border-left: none !important;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 900px) {
+  .grid-tarjetas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* Corrección de color y lista para la sección resumen */
+.lista-resumen-ixd {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lista-resumen-ixd li {
+  background-color: #292D4C;
+  color: #FFFFFF;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border-left: 4px solid #B7F032;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lista-resumen-ixd li span {
+  color: #B7F032;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.caja-audio-resumen {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #1A1D33;
+  border-radius: 8px;
+}
+
+.texto-audio-label {
+  background: transparent !important;
+  color: #D9D9D9 !important;
+  padding: 0 !important;
+  margin: 0 0 10px 0 !important;
+  font-size: 13px !important;
+}
